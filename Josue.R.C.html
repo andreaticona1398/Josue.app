@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi galaxia Josue</title>
+
+    <meta property="og:title" content="Galaxia Te amo">
+    <meta property="og:image" content="https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f496.png">
+    <meta property="og:url" content="">
+    <meta property="og:type" content="website">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://raw.githubusercontent.com/twitter/twemoji/master/assets/72x72/1f496.png">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%; height: 100%;
+            overflow: hidden;
+            background-color: #000000;
+            font-family: 'Patrick Hand', cursive;
+            cursor: grab;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body:active { cursor: grabbing; }
+
+        canvas {
+            display: block;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 1;
+        }
+
+        #main-title {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 4.5em;
+            color: #D4B49A;
+            text-shadow: 0 0 15px #C49A8A, 0 0 25px #8B5E52;
+            z-index: 10;
+            pointer-events: none;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        #entry-modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        #entry-button {
+            padding: 16px 34px;
+            border: 2px solid #C49A8A;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #D4B49A, #8B5E52);
+            color: #FFFFFF;
+            font-family: 'Patrick Hand', cursive;
+            font-size: 2em;
+            font-weight: 700;
+            cursor: pointer;
+            filter: drop-shadow(0 0 15px #C49A8A) drop-shadow(0 0 25px #8B5E52);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            animation: latido 1.5s infinite ease-in-out;
+        }
+
+        #entry-button:hover {
+            filter: drop-shadow(0 0 20px #D4B49A) drop-shadow(0 0 35px #C49A8A);
+            transform: scale(1.05);
+        }
+
+        @keyframes latido {
+            0%, 100% { transform: scale(1); }
+            50%       { transform: scale(1.08); }
+        }
+
+        #entry-text {
+            font-size: 1.8em;
+            color: #D4B49A;
+            text-shadow: 0 0 10px #C49A8A;
+            text-align: center;
+        }
+
+        #entry-text ul {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        #entry-text ul li::before {
+            content: "✦ ";
+        }
+
+        #firma {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9em;
+            color: #F6D1D5;
+            text-shadow: 0 0 5px #E8A2A8;
+            z-index: 20;
+            text-align: center;
+            opacity: 0.8;
+        }
+
+        #love-card-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            cursor: pointer;
+        }
+
+        #love-card {
+            position: relative;
+            width: 90%;
+            max-width: 400px;
+            aspect-ratio: 9 / 16;
+            background-size: cover;
+            background-position: center;
+            border-radius: 20px;
+            box-shadow: 0 0 30px #C49A8A, 0 0 50px #8B5E52;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        #love-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+
+        #love-card-text {
+            position: relative;
+            font-size: 3em;
+            color: #ffffff;
+            text-shadow: 0 0 8px black, 0 0 15px black;
+            z-index: 2;
+        }
+
+        @media (max-width: 768px) {
+            #main-title    { font-size: 3.4em; top: 25px; }
+            #love-card-text { font-size: 2.8em; }
+        }
+
+        @media (max-width: 480px) {
+            #main-title { font-size: 2.5em; top: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="main-title">Josue y Andrea 13.05</h1>
+
+    <div id="entry-modal">
+        <button id="entry-button">Apreta aquí niñito</button>
+
+        <div id="entry-text">
+            <p>Te amo 💖</p>
+            <ul>
+                <li>Gira a la izquierda, arriba</li>
+                <li>Gira a la derecha, abajo</li>
+                <li>Dale zoom</li>
+                <li>Lee con atención</li>
+                <li>Toca los emojis</li>
+                <li>Escucha la canción</li>
+                <li>¡Diviértete! 🎉</li>
+            </ul>
+        </div>
+
+        <div id="firma">
+            Cuídate y come bien niñito.............. Atte: Andrea💖
+        </div>
+    </div>
+
+    <div id="love-card-overlay">
+        <div id="love-card">
+            <p id="love-card-text"></p>
+        </div>
+    </div>
+
+    <audio id="background-music" loop></audio>
+
+    <canvas id="galaxy-canvas"></canvas>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three":          "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/":  "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <script>
+        /* ── Bloquear inspección ── */
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.onkeydown = function(e) {
+            const blocked =
+                e.keyCode === 123 ||
+                (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(String.fromCharCode(e.keyCode))) ||
+                (e.ctrlKey && ['U','S'].includes(String.fromCharCode(e.keyCode)));
+            if (blocked) return false;
+        };
+    </script>
+
+    <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls }  from 'three/addons/controls/OrbitControls.js';
+    import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+    import { RenderPass }     from 'three/addons/postprocessing/RenderPass.js';
+    import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+    /* ================================================================
+       CONFIGURACIÓN CENTRAL — edita aquí para personalizar
+    ================================================================ */
+    const CONFIG = {
+        galaxy: {
+            rotationSpeed: 0.12,
+            centerExclusionRadius: 45
+        },
+        elementExclusionRadius: 40,
+
+        blackHole: {
+            radius: 12,
+            segments: 64,
+            color1: '#8B5E52',
+            color2: '#C49A8A'
+        },
+
+        accretionRing: {
+            innerRadius: 18,
+            outerRadius: 32,
+            segments: 128,
+            centerColor: '#D4B49A',
+            midColor: '#C49A8A',
+            edgeColor: '#8B5E52',
+            emissiveIntensity: 0.6
+        },
+
+        particles: {
+            coreStars: {
+                count: 20000,
+                radius: 120,
+                maxHeight: 60,
+                size: 0.25
+            },
+            sphericalHalo: {
+                count: 18000,
+                radiusXZ: 110,
+                radiusY: 55,
+                size: 0.18,
+                minDistFromCenter: 28
+            },
+            backgroundStars: {
+                count: 5000,
+                radius: 500,
+                size: 0.2
+            },
+            texts: {
+                count: 50,
+                width: 45,
+                height: 20,
+                minRadius: null,
+                maxRadius: 120,
+                content: [
+                    "Siempre tu y yo ",
+                    "Eres mi calma ",
+                    "Me haces feliz ",
+                    "Tus ojos me encantan ",
+                    "Qué bonito coincidir ",
+                    "Mi lugar favorito ",
+                    "Contigo todo es mejor",
+                    "Tu luz me inspira ",
+                    "Eres mi niño ",
+                    "Gracias por existir ",
+                    "Mi corazón te elige ",
+                    "Me encantas",
+                    "Eres mi paz "
+                ],
+                colors: [
+                    { fill: '#C49A8A', shadow: '#8B5E52' },
+                    { fill: '#D4B49A', shadow: '#C49A8A' },
+                    { fill: '#BF9080', shadow: '#8B5E52' }
+                ]
+            },
+            emojis: {
+                count: 60,
+                size: 12,
+                minRadius: null,
+                maxRadius: 120,
+                content: ['🍁','🧡','🍂','🤎','🐷','🦁','🐻','🫰','😻','🥰'],
+                colors: [
+                    { fill: '#D4B49A', shadow: '#8B5E52' },
+                    { fill: '#BF9080', shadow: '#C49A8A' },
+                    { fill: '#C49A8A', shadow: '#8B5E52' }
+                ]
+            }
+        },
+
+        loveCards: {
+            images: [
+                'https://picsum.photos/seed/josue1/400/710',
+                'https://picsum.photos/seed/josue2/400/710',
+                'https://picsum.photos/seed/josue3/400/710',
+                'https://picsum.photos/seed/josue4/400/710'
+            ],
+            phrases: [
+                "Tus ojos son lo primero que quiero ver cada mañana niñito 🧡",
+                "Tu presencia tiene un no se que: que todo se siente más cálido contigo amorcitoooo 🍁",
+                "La palabra TE AMO queda corta para todo lo que siento por ti mi vidita Josue",
+                "En las buenas y malas pero siempre juntos J & A"
+            ]
+        },
+
+        music: {
+            src: 'https://github.com/Baque2005/Organizador/raw/refs/heads/master/Harry%20Styles%20-%20Sign%20of%20the%20Times%20(Official%20Video).mp3'
+        },
+
+        shootingStars: {
+            enabled: true,
+            spawnProbability: 0.01,
+            speed: 1.2
+        },
+
+        lighting: {
+            ambient: { color: '#ffffff', intensity: 0.1 },
+            point:   { color: '#C49A8A', intensity: 2.5, distance: 350 }
+        },
+
+        bloom: { threshold: 0.68, strength: 0.7, radius: 0.5 },
+        camera: { minDistance: 30, maxDistance: 250 }
+    };
+    /* ================================================================ */
+
+    let scene, camera, renderer, controls, galaxyGroup, clock, heartMaterial, composer;
+    let loveTexts  = [];
+    let loveImages = [];
+    let shootingStars = [];
+    let occupiedPositions = [];
+    let raycaster, mouse;
+    let currentCardIndex = 0;
+
+    /* ── INIT ── */
+    function init() {
+        scene  = new THREE.Scene();
+        clock  = new THREE.Clock();
+        raycaster = new THREE.Raycaster();
+        mouse     = new THREE.Vector2();
+
+        camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+        renderer = new THREE.WebGLRenderer({
+            canvas: document.getElementById('galaxy-canvas'),
+            antialias: true
+        });
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.minDistance   = CONFIG.camera.minDistance;
+        controls.maxDistance   = CONFIG.camera.maxDistance;
+
+        const renderPass = new RenderPass(scene, camera);
+        const bloomPass  = new UnrealBloomPass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            1.5, 0.4, 0.85
+        );
+        bloomPass.threshold = CONFIG.bloom.threshold;
+        bloomPass.strength  = CONFIG.bloom.strength;
+        bloomPass.radius    = CONFIG.bloom.radius;
+
+        composer = new EffectComposer(renderer);
+        composer.addPass(renderPass);
+        composer.addPass(bloomPass);
+
+        scene.add(new THREE.AmbientLight(CONFIG.lighting.ambient.color, CONFIG.lighting.ambient.intensity));
+        const pLight = new THREE.PointLight(CONFIG.lighting.point.color, CONFIG.lighting.point.intensity, CONFIG.lighting.point.distance);
+        pLight.position.set(0, 0, 0);
+        scene.add(pLight);
+
+        galaxyGroup = new THREE.Group();
+        scene.add(galaxyGroup);
+
+        buildHeart();
+        buildCoreStars();
+        buildSphericalHalo();
+        buildBackgroundStars();
+        buildLoveElements();
+
+        window.addEventListener('resize', onResize);
+        renderer.domElement.addEventListener('click', onCanvasClick);
+        onResize();
+        animate();
+    }
+
+    /* ── CORAZÓN CENTRAL ── */
+    function buildHeart() {
+        const bh   = CONFIG.blackHole;
+        const ring = CONFIG.accretionRing;
+
+        heartMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                uTime:   { value: 0 },
+                uColor1: { value: new THREE.Color(bh.color1) },
+                uColor2: { value: new THREE.Color(bh.color2) }
+            },
+            vertexShader: `
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }`,
+            fragmentShader: `
+                uniform float uTime;
+                uniform vec3  uColor1;
+                uniform vec3  uColor2;
+                varying vec2  vUv;
+                float noise(vec2 st) {
+                    return fract(sin(dot(st, vec2(12.9898, 78.233))) * 43758.5453123);
+                }
+                void main() {
+                    float n = noise(vUv * 4.0 + uTime * 0.1);
+                    gl_FragColor = vec4(mix(uColor1, uColor2, n), 1.0);
+                }`
+        });
+
+        const s = bh.radius;
+        const heartShape = new THREE.Shape();
+        heartShape.moveTo(0, -s * 0.5);
+        heartShape.bezierCurveTo(-s * 0.1, -s * 0.8, -s, -s * 0.8, -s, -s * 0.2);
+        heartShape.bezierCurveTo(-s, s * 0.3,  -s * 0.5, s * 0.7, 0, s);
+        heartShape.bezierCurveTo( s * 0.5, s * 0.7,  s, s * 0.3,  s, -s * 0.2);
+        heartShape.bezierCurveTo( s * 0.1, -s * 0.8, s * 0.1, -s * 0.8, 0, -s * 0.5);
+
+        const geo  = new THREE.ExtrudeGeometry(heartShape, {
+            depth: s * 0.5, bevelEnabled: true,
+            bevelSegments: 6, steps: 2,
+            bevelSize: 1.2, bevelThickness: 1.2
+        });
+        geo.center();
+
+        const heartMesh = new THREE.Mesh(geo, heartMaterial);
+        heartMesh.rotation.z = Math.PI;
+        scene.add(heartMesh);
+
+        /* Anillo de acreción */
+        const ringGeo = new THREE.RingGeometry(ring.innerRadius, ring.outerRadius, ring.segments);
+        const ringMat = new THREE.ShaderMaterial({
+            uniforms: {
+                innerRadius:       { value: ring.innerRadius },
+                outerRadius:       { value: ring.outerRadius },
+                centerColor:       { value: new THREE.Color(ring.centerColor) },
+                midColor:          { value: new THREE.Color(ring.midColor) },
+                edgeColor:         { value: new THREE.Color(ring.edgeColor) },
+                emissiveIntensity: { value: ring.emissiveIntensity }
+            },
+            vertexShader: `
+                varying vec3 vPosition;
+                void main() {
+                    vPosition = position;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }`,
+            fragmentShader: `
+                uniform float innerRadius, outerRadius, emissiveIntensity;
+                uniform vec3  centerColor, midColor, edgeColor;
+                varying vec3  vPosition;
+                void main() {
+                    float d = length(vPosition.xy);
+                    float t = clamp((d - innerRadius) / (outerRadius - innerRadius), 0.0, 1.0);
+                    vec3 col = t < 0.5
+                        ? mix(centerColor, midColor, t * 2.0)
+                        : mix(midColor, edgeColor, (t - 0.5) * 2.0);
+                    float glow = 1.0 - smoothstep(0.0, 1.0, t);
+                    gl_FragColor = vec4(col + col * emissiveIntensity * glow, 1.0);
+                }`,
+            side: THREE.DoubleSide
+        });
+
+        const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+        ringMesh.rotation.x = Math.PI / 2;
+        scene.add(ringMesh);
+
+        /* Texto circular "TE AMO JOSUE" en el anillo */
+        const ringTextGroup = new THREE.Group();
+        const ringLabel  = "TE AMO JOSUE";
+        const ringRadius = (ring.innerRadius + ring.outerRadius) / 2;
+
+        for (let i = 0; i < ringLabel.length; i++) {
+            const angle   = (i / ringLabel.length) * Math.PI * 2;
+            const cCanvas = document.createElement('canvas');
+            cCanvas.width = cCanvas.height = 128;
+            const cCtx = cCanvas.getContext('2d');
+            cCtx.font         = 'bold 72px "Patrick Hand", cursive';
+            cCtx.fillStyle    = '#ffffff';
+            cCtx.textAlign    = 'center';
+            cCtx.textBaseline = 'middle';
+            cCtx.shadowColor  = '#D4B49A';
+            cCtx.shadowBlur   = 12;
+            cCtx.fillText(ringLabel[i], 64, 64);
+
+            const cTex  = new THREE.CanvasTexture(cCanvas);
+            const cMat  = new THREE.MeshBasicMaterial({ map: cTex, transparent: true, alphaTest: 0.05, side: THREE.DoubleSide, depthWrite: false });
+            const cMesh = new THREE.Mesh(new THREE.PlaneGeometry(5, 5), cMat);
+            cMesh.position.set(Math.cos(angle) * ringRadius, 0.5, Math.sin(angle) * ringRadius);
+            cMesh.rotation.x = -Math.PI / 2;
+            cMesh.rotation.z = -angle - Math.PI / 2;
+            ringTextGroup.add(cMesh);
+        }
+        scene.add(ringTextGroup);
+        window._ringTextGroup = ringTextGroup;
+
+        /* Texto "TU y YO / 2026" dentro del corazón */
+        const htCanvas = document.createElement('canvas');
+        htCanvas.width = htCanvas.height = 512;
+        const htCtx = htCanvas.getContext('2d');
+        htCtx.clearRect(0, 0, 512, 512);
+        htCtx.textAlign    = 'center';
+        htCtx.textBaseline = 'middle';
+        htCtx.shadowColor  = '#ffffff';
+        htCtx.shadowBlur   = 18;
+        htCtx.fillStyle    = '#ffffff';
+        htCtx.font         = 'bold 110px "Patrick Hand", cursive';
+        htCtx.fillText('TU y YO', 256, 180);
+        htCtx.font        = 'bold 90px "Patrick Hand", cursive';
+        htCtx.fillStyle   = '#D4B49A';
+        htCtx.shadowColor = '#C49A8A';
+        htCtx.fillText('2026', 256, 320);
+
+        const htTex  = new THREE.CanvasTexture(htCanvas);
+        htTex.colorSpace = THREE.SRGBColorSpace;
+        const htMat  = new THREE.MeshBasicMaterial({ map: htTex, transparent: true, alphaTest: 0.05, side: THREE.DoubleSide, depthWrite: false });
+        const htMesh = new THREE.Mesh(new THREE.PlaneGeometry(18, 18), htMat);
+        htMesh.position.set(0, 0, 7);
+        scene.add(htMesh);
+        window._heartTextMesh = htMesh;
+    }
+
+    /* ── ESTRELLAS NÚCLEO ── */
+    function buildCoreStars() {
+        const cfg = CONFIG.particles.coreStars;
+        const geo = new THREE.BufferGeometry();
+        const pos = new Float32Array(cfg.count * 3);
+        const col = new Float32Array(cfg.count * 3);
+        const c   = new THREE.Color();
+
+        for (let i = 0; i < cfg.count; i++) {
+            const dist  = CONFIG.accretionRing.outerRadius + Math.random() * (cfg.radius - CONFIG.accretionRing.outerRadius);
+            const angle = Math.random() * Math.PI * 2;
+            const y     = (Math.random() - 0.5) * cfg.maxHeight * Math.pow(1 - dist / cfg.radius, 1.5);
+            pos.set([Math.cos(angle) * dist, y, Math.sin(angle) * dist], i * 3);
+            c.setHSL(0.06 + Math.random() * 0.04, 0.5 + Math.random() * 0.3, 0.5 + Math.random() * 0.4);
+            col.set([c.r, c.g, c.b], i * 3);
+        }
+
+        geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        geo.setAttribute('color',    new THREE.BufferAttribute(col, 3));
+        galaxyGroup.add(new THREE.Points(geo, new THREE.PointsMaterial({
+            size: cfg.size, blending: THREE.AdditiveBlending,
+            vertexColors: true, transparent: true
+        })));
+    }
+
+    /* ── HALO ESFÉRICO ── */
+    function buildSphericalHalo() {
+        const cfg = CONFIG.particles.sphericalHalo;
+        const geo = new THREE.BufferGeometry();
+        const pos = new Float32Array(cfg.count * 3);
+        const col = new Float32Array(cfg.count * 3);
+        const c   = new THREE.Color();
+        let filled = 0;
+
+        while (filled < cfg.count) {
+            const rx = Math.random() * 2 - 1;
+            const ry = Math.random() * 2 - 1;
+            const rz = Math.random() * 2 - 1;
+            if (rx*rx + ry*ry + rz*rz > 1) continue;
+
+            const x = rx * cfg.radiusXZ;
+            const y = ry * cfg.radiusY;
+            const z = rz * cfg.radiusXZ;
+            const dist = Math.sqrt(x*x + y*y + z*z);
+            if (dist < cfg.minDistFromCenter) continue;
+
+            const rNorm = dist / Math.max(cfg.radiusXZ, cfg.radiusY);
+            if (Math.random() > Math.pow(1 - rNorm * 0.7, 1.2)) continue;
+
+            pos.set([x, y, z], filled * 3);
+            c.setHSL(0.06 + Math.random() * 0.04, 0.4 + Math.random() * 0.3, 0.35 + Math.random() * 0.4);
+            col.set([c.r, c.g, c.b], filled * 3);
+            filled++;
+        }
+
+        geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        geo.setAttribute('color',    new THREE.BufferAttribute(col, 3));
+        galaxyGroup.add(new THREE.Points(geo, new THREE.PointsMaterial({
+            size: cfg.size, blending: THREE.AdditiveBlending,
+            vertexColors: true, transparent: true, opacity: 0.65
+        })));
+    }
+
+    /* ── ESTRELLAS DE FONDO ── */
+    function buildBackgroundStars() {
+        const cfg = CONFIG.particles.backgroundStars;
+        const geo = new THREE.BufferGeometry();
+        const pos = new Float32Array(cfg.count * 3);
+        const r   = cfg.radius;
+
+        for (let i = 0; i < cfg.count; i++) {
+            pos.set([(Math.random()-0.5)*2*r, (Math.random()-0.5)*2*r, (Math.random()-0.5)*2*r], i * 3);
+        }
+
+        geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+        scene.add(new THREE.Points(geo, new THREE.PointsMaterial({
+            size: cfg.size, color: 0xffffff, transparent: true, opacity: 0.5
+        })));
+
+        buildCosmicElements();
+        buildZodiacSigns();
+    }
+
+    /* ── ELEMENTOS CÓSMICOS SUPERIORES ── */
+    function buildCosmicElements() {
+        const emojis = ['☄️','🌑','🌌','💫','🪐','⭐','🌠'];
+        window._cosmicMeshes = [];
+
+        for (let i = 0; i < 22; i++) {
+            const cv  = document.createElement('canvas');
+            cv.width  = cv.height = 256;
+            const ctx = cv.getContext('2d');
+            ctx.clearRect(0, 0, 256, 256);
+            ctx.font         = '160px "Segoe UI Emoji","Apple Color Emoji",sans-serif';
+            ctx.textAlign    = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.shadowColor  = '#C49A8A';
+            ctx.shadowBlur   = 20;
+            ctx.fillText(emojis[i % emojis.length], 128, 128);
+
+            const tex  = new THREE.CanvasTexture(cv);
+            tex.colorSpace = THREE.SRGBColorSpace;
+            const mat  = new THREE.MeshBasicMaterial({ map: tex, transparent: true, alphaTest: 0.05, side: THREE.DoubleSide, depthWrite: false });
+            const size = 10 + Math.random() * 14;
+            const mesh = new THREE.Mesh(new THREE.PlaneGeometry(size, size), mat);
+
+            const angle  = Math.random() * Math.PI * 2;
+            const radius = 80 + Math.random() * 200;
+            const yPos   = 60 + Math.random() * 180;
+            mesh.position.set(Math.cos(angle) * radius, yPos, Math.sin(angle) * radius);
+            mesh.userData = { orbitSpeed: (Math.random()-0.5)*0.003, orbitRadius: radius, orbitAngle: angle, yPos };
+            scene.add(mesh);
+            window._cosmicMeshes.push(mesh);
+        }
+    }
+
+    /* ── SIGNOS DEL ZODIACO ── */
+    function buildZodiacSigns() {
+        window._zodiacMeshes = [];
+        const signs = [
+            { symbol: '♏', name: 'Escorpio',  color: '#C49A8A', shadow: '#8B5E52' },
+            { symbol: '♐', name: 'Sagitario', color: '#D4B49A', shadow: '#C49A8A' }
+        ];
+
+        signs.forEach((z, idx) => {
+            const cv  = document.createElement('canvas');
+            cv.width  = cv.height = 512;
+            const ctx = cv.getContext('2d');
+            ctx.clearRect(0, 0, 512, 512);
+            ctx.font         = '260px serif';
+            ctx.fillStyle    = z.color;
+            ctx.textAlign    = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.shadowColor  = z.shadow;
+            ctx.shadowBlur   = 30;
+            ctx.fillText(z.symbol, 256, 240);
+            ctx.font        = 'bold 72px "Patrick Hand",cursive';
+            ctx.fillStyle   = '#ffffff';
+            ctx.shadowColor = z.color;
+            ctx.shadowBlur  = 18;
+            ctx.fillText(z.name, 256, 420);
+
+            const tex  = new THREE.CanvasTexture(cv);
+            tex.colorSpace = THREE.SRGBColorSpace;
+            const mat  = new THREE.MeshBasicMaterial({ map: tex, transparent: true, alphaTest: 0.05, side: THREE.DoubleSide, depthWrite: false });
+            const mesh = new THREE.Mesh(new THREE.PlaneGeometry(28, 28), mat);
+
+            const angle  = (idx / 2) * Math.PI * 2 + Math.PI / 4;
+            const radius = 100 + Math.random() * 80;
+            const yPos   = -80 - Math.random() * 100;
+            mesh.position.set(Math.cos(angle) * radius, yPos, Math.sin(angle) * radius);
+            scene.add(mesh);
+            window._zodiacMeshes.push(mesh);
+
+            /* Estrellas alrededor del signo */
+            const starGeo = new THREE.BufferGeometry();
+            const starCount = 40;
+            const starPos   = new Float32Array(starCount * 3);
+            for (let s = 0; s < starCount; s++) {
+                const sr = 25 + Math.random() * 35;
+                const sa = Math.random() * Math.PI * 2;
+                const sy = (Math.random() - 0.5) * 20;
+                starPos.set([
+                    mesh.position.x + Math.cos(sa) * sr,
+                    yPos + sy,
+                    mesh.position.z + Math.sin(sa) * sr
+                ], s * 3);
+            }
+            starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+            const starMat = new THREE.PointsMaterial({
+                size: 0.8,
+                color: z.color === '#C49A8A' ? 0xC49A8A : 0xD4B49A,
+                transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending
+            });
+            scene.add(new THREE.Points(starGeo, starMat));
+        });
+    }
+
+    /* ── TEXTOS Y EMOJIS FLOTANTES ── */
+    function buildLoveElements() {
+        const txtCfg   = CONFIG.particles.texts;
+        const emojiCfg = CONFIG.particles.emojis;
+
+        for (let i = 0; i < txtCfg.count; i++) {
+            const colorData = txtCfg.colors[i % txtCfg.colors.length];
+            const tex = makeTextTexture(txtCfg.content[i % txtCfg.content.length], colorData);
+            const mat = new THREE.MeshPhongMaterial({ map: tex, transparent: true, alphaTest: 0.1, emissive: colorData.fill, emissiveIntensity: 1.2 });
+            const mesh = new THREE.Mesh(new THREE.PlaneGeometry(txtCfg.width, txtCfg.height), mat);
+            placeElement(mesh, txtCfg.minRadius, txtCfg.maxRadius);
+            galaxyGroup.add(mesh);
+            loveTexts.push(mesh);
+        }
+
+        for (let i = 0; i < emojiCfg.count; i++) {
+            const colorData = emojiCfg.colors[i % emojiCfg.colors.length];
+            const tex = makeEmojiTexture(emojiCfg.content[i % emojiCfg.content.length], colorData);
+            const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, alphaTest: 0.1 });
+            const mesh = new THREE.Mesh(new THREE.PlaneGeometry(emojiCfg.size, emojiCfg.size), mat);
+            placeElement(mesh, emojiCfg.minRadius, emojiCfg.maxRadius);
+            galaxyGroup.add(mesh);
+            loveImages.push(mesh);
+        }
+    }
+
+    /* ── HELPERS ── */
+    function placeElement(element, minR, maxR) {
+        const safeMin = minR || CONFIG.elementExclusionRadius;
+        const safeMax = maxR || CONFIG.particles.coreStars.radius;
+        const minSep  = 18;
+        let valid = false, attempts = 0, pos = { x:0, y:0, z:0 };
+
+        while (!valid && attempts < 50) {
+            attempts++;
+            const r     = safeMin + Math.random() * (safeMax - safeMin);
+            const theta = Math.random() * Math.PI * 2;
+            const y     = (Math.random() - 0.5) * 15;
+            const x     = r * Math.cos(theta);
+            const z     = r * Math.sin(theta);
+            valid = true;
+            for (const p of occupiedPositions) {
+                if (Math.sqrt((x-p.x)**2 + (y-p.y)**2 + (z-p.z)**2) < minSep) { valid = false; break; }
+            }
+            if (valid) pos = { x, y, z };
+        }
+
+        element.position.set(pos.x, pos.y, pos.z);
+        occupiedPositions.push(pos);
+    }
+
+    function makeTextTexture(text, color) {
+        const cv  = document.createElement('canvas');
+        cv.width  = 1536;
+        cv.height = 512;
+        const ctx = cv.getContext('2d');
+        ctx.font         = '84px "Patrick Hand",cursive';
+        ctx.fillStyle    = color.fill;
+        ctx.textAlign    = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.shadowColor  = color.shadow;
+        ctx.shadowBlur   = 3;
+
+        const words = text.split(' ');
+        let lines = [], current = words[0];
+        const maxW = cv.width - 100, lineH = 100;
+        for (let i = 1; i < words.length; i++) {
+            const test = current + ' ' + words[i];
+            if (ctx.measureText(test).width > maxW && current.length) { lines.push(current); current = words[i]; }
+            else current = test;
+        }
+        lines.push(current);
+        const startY = cv.height / 2 - (lines.length - 1) * lineH / 2;
+        lines.forEach((line, idx) => ctx.fillText(line, cv.width / 2, startY + idx * lineH));
+
+        return new THREE.CanvasTexture(cv);
+    }
+
+    function makeEmojiTexture(emoji, color) {
+        const cv  = document.createElement('canvas');
+        cv.width  = cv.height = 512;
+        const ctx = cv.getContext('2d');
+        ctx.clearRect(0, 0, 512, 512);
+        ctx.textAlign    = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font         = '320px "Segoe UI Emoji","Apple Color Emoji",sans-serif';
+        ctx.shadowColor  = color.shadow;
+        ctx.shadowBlur   = 24;
+        ctx.fillStyle    = color.fill;
+        ctx.fillText(emoji, 256, 272);
+
+        const tex = new THREE.CanvasTexture(cv);
+        tex.colorSpace = THREE.SRGBColorSpace;
+        tex.generateMipmaps = false;
+        tex.minFilter = tex.magFilter = THREE.LinearFilter;
+        return tex;
+    }
+
+    /* ── ESTRELLA FUGAZ ── */
+    function spawnShootingStar() {
+        const geo  = new THREE.BufferGeometry();
+        geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array([0,0,0]), 3));
+        const mat  = new THREE.PointsMaterial({ color: 0xffffff, size: 1.8, blending: THREE.AdditiveBlending, transparent: true });
+        const star = new THREE.Points(geo, mat);
+        star.position.set(
+            THREE.MathUtils.randFloatSpread(800),
+            THREE.MathUtils.randFloat(100, 300),
+            THREE.MathUtils.randFloatSpread(800)
+        );
+        star.userData.velocity = new THREE.Vector3(
+            (Math.random() < 0.5 ? -1 : 1) * CONFIG.shootingStars.speed,
+            -CONFIG.shootingStars.speed * 0.5,
+            (Math.random() - 0.5) * 2
+        );
+        star.userData.life = 0;
+        shootingStars.push(star);
+        scene.add(star);
+    }
+
+    /* ── CARD OVERLAY ── */
+    function showCard() {
+        const overlay = document.getElementById('love-card-overlay');
+        const card    = document.getElementById('love-card');
+        const text    = document.getElementById('love-card-text');
+        card.style.backgroundImage = `url('${CONFIG.loveCards.images[currentCardIndex]}')`;
+        text.textContent = CONFIG.loveCards.phrases[currentCardIndex];
+        overlay.style.display = 'flex';
+        currentCardIndex = (currentCardIndex + 1) % CONFIG.loveCards.images.length;
+    }
+
+    function hideCard() {
+        document.getElementById('love-card-overlay').style.display = 'none';
+    }
+
+    /* ── RESIZE ── */
+    function onResize() {
+        const w = window.innerWidth, h = window.innerHeight;
+        renderer.setSize(w, h);
+        composer.setSize(w, h);
+        camera.aspect = w / h;
+        camera.position.set(0, 35, w < 768 ? 150 : 120);
+        camera.updateProjectionMatrix();
+    }
+
+    /* ── CLICK EN CANVAS ── */
+    function onCanvasClick(e) {
+        mouse.x =  (e.clientX / window.innerWidth)  * 2 - 1;
+        mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+        if (raycaster.intersectObjects(loveImages).length > 0) showCard();
+    }
+
+    /* ── LOOP ── */
+    function animate() {
+        requestAnimationFrame(animate);
+        const t = clock.getElapsedTime();
+
+        galaxyGroup.rotation.y = t * CONFIG.galaxy.rotationSpeed;
+        if (heartMaterial) heartMaterial.uniforms.uTime.value = t;
+
+        loveTexts.forEach(m  => m.lookAt(camera.position));
+        loveImages.forEach(m => m.lookAt(camera.position));
+
+        if (window._ringTextGroup)  window._ringTextGroup.rotation.y  = -t * CONFIG.galaxy.rotationSpeed * 0.8;
+        if (window._heartTextMesh)  window._heartTextMesh.lookAt(camera.position);
+
+        if (window._cosmicMeshes) {
+            window._cosmicMeshes.forEach(m => {
+                m.userData.orbitAngle += m.userData.orbitSpeed;
+                m.position.x = Math.cos(m.userData.orbitAngle) * m.userData.orbitRadius;
+                m.position.z = Math.sin(m.userData.orbitAngle) * m.userData.orbitRadius;
+                m.lookAt(camera.position);
+            });
+        }
+
+        if (window._zodiacMeshes) {
+            window._zodiacMeshes.forEach(m => m.lookAt(camera.position));
+        }
+
+        if (CONFIG.shootingStars.enabled && Math.random() < CONFIG.shootingStars.spawnProbability) {
+            spawnShootingStar();
+        }
+
+        shootingStars.forEach((star, idx) => {
+            star.position.add(star.userData.velocity);
+            star.userData.life++;
+            if (star.userData.life > 300) {
+                scene.remove(star);
+                shootingStars.splice(idx, 1);
+            }
+        });
+
+        controls.update();
+        composer.render();
+    }
+
+    /* ── ARRANQUE ── */
+    init();
+
+    document.getElementById('entry-button').addEventListener('click', () => {
+        const music = document.getElementById('background-music');
+        music.src = CONFIG.music.src;
+        music.load();
+        music.play().catch(err => console.warn('Audio bloqueado por el navegador:', err));
+        document.getElementById('entry-modal').style.display = 'none';
+    });
+
+    document.getElementById('love-card-overlay').addEventListener('click', hideCard);
+
+    </script>
+</body>
+</html>
